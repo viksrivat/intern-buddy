@@ -23,7 +23,7 @@ class Config(object):
 
     SECRET_KEY = os.environ.get(
         "SECRET_KEY",
-        "",
+        "HACKATHON_SECRET_KEY_TODO_INSERT",
     )
     expires = datetime.timedelta(days=30)
 
