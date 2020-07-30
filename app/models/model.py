@@ -53,10 +53,11 @@ class Preference(db.Model):
 
     location = db.Column(db.String)
     school = db.Column(db.String)
+    
     group_size = db.Column(db.Integer)
     position_type = db.Column(db.Integer)
     age = db.Column(db.Integer)
 
-    hangout_outside = db.Column(db.String)
+    hangout_outside = db.Column(db.Boolean)
 
     user = relationship("User", back_populates="preferences", uselist=False)
