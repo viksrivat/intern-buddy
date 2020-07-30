@@ -28,7 +28,6 @@ class User(db.Model):
     __table_args__ = {'extend_existing': True}
     user_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    paired = db.Column(db.Boolean)
 
     group_id = db.Column(db.Integer, db.ForeignKey('group.group_id'))
     group = relationship("Group", back_populates="users")
@@ -37,7 +36,7 @@ class User(db.Model):
     preferences = relationship("Preference", back_populates="user", foreign_keys=[preference_id], uselist=False)
 
     @property
-    def temperature(self):
+    def paired(self):
         return self.group is not None
 
 class Group(db.Model):
