@@ -24,22 +24,33 @@ class Position:
     sde = 2
 
 class User(db.Model):
+    __tablename__ = 'user'
     __table_args__ = {'extend_existing': True}
     user_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     paired = db.Column(db.Boolean)
-    group_id = db.Column(db.Integer, db.ForeignKey('Group.group_id'))
+
+    group_id = db.Column(db.Integer, db.ForeignKey('group.group_id'))
     group = relationship("Group", back_populates="users")
-    
-class Group(db.Model)
+
+    preference_id = db.Column(db.Integer, db.ForeignKey('preference.preference_id'))
+    preferences = relationship("Preference", back_populates="user", foreign_keys=[preference_id], uselist=False)
+
+    @property
+    def temperature(self):
+        return self.group is not None
+
+class Group(db.Model):
+    __tablename__ = 'group'
     __table_args__ = {'extend_existing': True}
     group_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
-    groups = relationship("User", back_populates="group", uselist=True)
+    users = relationship("User", back_populates="group", uselist=True)
 
 class Preference(db.Model):
+    __tablename__ = 'preference'
     __table_args__ = {'extend_existing': True}
     extend_existing = True
-    preference_id = db.Column(db.Integer, db.ForeignKey('User.user_id'))
+    preference_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
 
     location = db.Column(db.String)
     school = db.Column(db.String)
@@ -48,3 +59,5 @@ class Preference(db.Model):
     age = db.Column(db.Integer)
 
     hangout_outside = db.Column(db.String)
+
+    user = relationship("User", back_populates="preferences", uselist=False)
