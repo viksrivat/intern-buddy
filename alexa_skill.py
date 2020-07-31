@@ -43,14 +43,17 @@ def setup_questions():
     position_type_text = "Four. What's your intern position? You can say Software Development, Business Analyst, Program Manager, etc."
     age_text = "Five. Would you like to match with undergraduates or graduates?"
     hang_out_text = "Six. Would you be willing to hang out with your buddy after work? You can say hang out or stay home."
+    phone_text = "Seven. Please provide a phone number. This question is required."
+    alias_text = "Eight. Please provide the alias for your email. The alias is everything before the at symbol. This question is required."
+    domain_text = "Nine. Please provide the domain for your email. The domain is everything after the at symbol. This question is required."
 
-    return [start_text, location_text, school_text, group_size_text, position_type_text, age_text, hang_out_text]
+    return [start_text, location_text, school_text, group_size_text, position_type_text, age_text, hang_out_text, phone_text, alias_text, domain_text]
 
 def get_preference(pref_num):
     session.attributes["question_number"] = pref_num + 1
-    if pref_num == len(session.attributes["questions"]):
-        print(session.attributes)
+    if pref_num >= len(session.attributes["questions"]):
         r = requests.post('http://089af49540a4.ngrok.io/session_info', json=session.attributes)
+        set_email()
         return statement("Analyzing your preferences. Please wait while we search for your match!")
     else:
         current_question = session.attributes["questions"][pref_num]
@@ -59,6 +62,10 @@ def get_preference(pref_num):
         return question(current_question)
 
 """Intent Handlers"""
+@ask.intent("AMAZON.HelpIntent")
+def help_intent():
+    help_text = 'You can say repeat to get the question again. If you would like, you can say skip, proceed, or continue to go to the next question.'
+    return statement(help_text)
 # Exit if user responds no to getting matched.
 @ask.intent("StartIntentNo")
 def no_intent():
@@ -71,11 +78,19 @@ def initiate_get_preferences():
     logging.warning("Start Intent Question Number: " + str(session.attributes["question_number"]))
     return get_preference(session.attributes["question_number"])
 
-# Co    ntinue questions until no more are left.
+# Continue questions until no more are left.
 @ask.intent("ContinueIntent")
 def next_question():
     logging.warning("Continue Intent Question Number: " + str(session.attributes["question_number"]))
     return get_preference(session.attributes["question_number"])
+
+@ask.intent("RepeatIntent")
+def repeat_question():
+    if pref_num != len(session.attributes["questions"]):
+        current_question = session.attributes["questions"][pref_num]
+        logging.warning("Current question: " + current_question)
+        logging.warning("Next question: " + str(session.attributes["question_number"]))
+        return question(current_question)
 
 @ask.intent("LocationIntent", convert={'Location' : str})
 def handle_location(Location):
@@ -90,7 +105,7 @@ def handle_school(School):
 @ask.intent("GroupSizeIntent", convert={'GroupSize' : str})
 def handle_group(GroupSize):
     session.attributes['GroupSize'] = GroupSize
-    return question("Your group size is: " + GroupSize + ". Would you like to proceed?")
+    return question("Your group size is: " + str(GroupSize) + ". Would you like to proceed?")
 
 @ask.intent("PositionIntent", convert={'Position' : str})
 def handle_group(Position):
@@ -106,6 +121,31 @@ def handle_group(Age):
 def handle_group(Hangout):
     session.attributes['HangoutIntent'] = Hangout
     return question("Your opted to: " + Hangout + ". Would you like to proceed?")
+
+@ask.intent("PhoneIntent", convert={'Phone' : str})
+def handle_group(Phone):
+    session.attributes['PhoneIntent'] = Phone
+    return question("Your phone number is: " + Phone + ". Would you like to proceed?")
+
+@ask.intent("AliasIntent", convert={'Alias' : str})
+def handle_alias(Alias):
+    format = Alias.replace(" ", "")
+    format = format.replace("dot", ".")
+    format = format.replace("period", ".")
+    format = format.replace("underscore", "_")
+    session.attributes["AliasIntent"] = format.lower()
+    return question("Your alias is: " + format + ". Would you like to continue?")
+
+@ask.intent("DomainIntent", convert={'Domain' : str})
+def handle_domain(Domain):
+    format = Domain.replace(" ", "")
+    format = format.replace("dot", ".")
+    format = format.replace("period", ".")
+    session.attributes["DomainIntent"] = format.lower()
+    return question("Your domain is: " + format + ". Would you like to continue?")
+
+def set_email():
+    return AliasIntent + "@" + DomainIntent;
 
 @ask.session_ended
 def session_ended():
