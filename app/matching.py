@@ -3,7 +3,9 @@ from app.models import model
 from sklearn.cluster import AgglomerativeClustering
 import geopy
 from geopy.distance import geodesic
-
+from scipy.cluster.hierarchy import fclusterdata
+from matplotlib import pyplot as plt
+from scipy.cluster.hierarchy import dendrogram
 
 def calculateLocationScore(location1, location2):
     # set 2700 miles
@@ -20,6 +22,31 @@ def calculateLocationScore(location1, location2):
         score = 0
     else:
         score = round((1 - distance/max), 1)
-    print(distance, score)
     return score
+
+
+def getChildrenDistPair(model):
+    counts = np.zeros(model.children_.shape[0])
+    n_samples = len(model.labels_)
+    for i, merge in enumerate(model.children_):
+        current_count = 0
+        for child_idx in merge:
+            if child_idx < n_samples:
+                current_count += 1  # leaf node
+            else:
+                current_count += counts[child_idx - n_samples]
+        counts[i] = current_count
+
+    matrix = np.column_stack([model.children_, model.distances_])
+    print(matrix)
+    return matrix
+
+
+# data = np.array([[1,0,2],[2,3,4],[1,5,1],[3,4,5],[1,0,9]])
+data = np.random.randn(5,3)
+
+# setting distance_threshold=0 ensures we compute the full tree.
+model = AgglomerativeClustering(distance_threshold=0, n_clusters=None)
+model.fit(data)
+getChildrenDistPair(model)
 
