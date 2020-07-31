@@ -5,10 +5,71 @@ from geopy.distance import geodesic
 from scipy.cluster.hierarchy import fclusterdata
 from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
+from app import db
+from app.models.model import User, GroupSize, Group
 
-def sim(x, y): 
-    print(x, y)
-    return 1.0 - np.sum(np.equal(np.array(x), np.array(y)))/len(x)
+
+# from app.models.model import User, Preference, GroupSize
+def match_routine():
+    unpaired = User.query.filter(User.group_id == None)
+    for size in [GroupSize.small, GroupSize.medium, GroupSize.large]:
+        users = unpaired.filter(User.preferences.has(group_size=size)).all()
+        print("Num Users for size", users)
+        match(users, size)
+
+
+def match(users, group_size):
+    num_clusters = max(int(len(users)/2), 1)
+    if group_size == GroupSize.medium:
+        num_clusters = max(int(len(users)/4), 1)
+    elif group_size == GroupSize.large:
+        num_clusters = max(int(len(users)/8), 1)
+    data = [user.get_preference_details_as_list() for user in users]
+    if not data:
+        return
+    print(data)
+    model = AgglomerativeClustering(n_clusters=num_clusters, affinity=sim_affinity, linkage='average')
+    model.fit(data)
+    labels = {}
+    for i, v in enumerate(model.labels_):
+        if v not in labels:
+            labels[v] = []
+        labels[v].append(users[i])
+    
+    for k, v in labels.items():
+        g = Group()
+        g.users = v
+        db.session.add(g)
+        db.session.commit()
+        for user in users:
+            user.send_paired_email(g)
+        
+    # case where is small
+
+
+def sim(x, y):
+    coordinatesX, coordinatesY = (x[0], x[1]), (y[0], y[1])
+    group_sizeX = x[2]
+    group_sizeY = y[2]
+    school_levelX, schoolLevelY = x[3], y[3]
+    hangout_outsideX, hangout_outsideY = x[4], y[4]
+    position_typeX, position_typeY  = x[5], y[5]
+    distance = geodesic(coordinatesX, coordinatesY).miles
+    if distance < 50:
+        score = 1
+    elif distance < 100:
+        score = 0.9
+    elif distance < 1000:
+        score = 0.7
+    elif distance < 5000:
+        score = 0.5
+    else:
+        score = 0
+    
+    locScore = score
+    x = [group_sizeX, school_levelX, hangout_outsideX, position_typeX]
+    y = [group_sizeY, schoolLevelY, hangout_outsideY, position_typeY]
+    return 1.0 - np.sum(np.equal(np.array(x), np.array(y)))/len(x) - locScore
 
 # Method to calculate distances between all sample pairs
 from sklearn.metrics import pairwise_distances
@@ -31,6 +92,7 @@ def calculateLocationScore(location1, location2):
         score = 0
     else:
         score = round((1 - distance/max), 1)
+    
     return score
 
 
@@ -46,15 +108,8 @@ def getChildrenDistPair(model):
                 current_count += counts[child_idx - n_samples]
         counts[i] = current_count
 
-    matrix = np.column_stack([model.children_, model.distances_])
-    print(matrix)
+    matrix = np.column_stack([model.children_])
     return matrix
 
-
-data = np.array([[1,0,2],[2,3,4],[1,5,1],[3,4,5],[1,0,9]])
-# data = np.random.randn(5,3)
-# setting distance_threshold=0 ensures we compute the full tree.
-model = AgglomerativeClustering(distance_threshold=0, n_clusters=None, affinity=sim_affinity, linkage='average')
-model.fit(data)
-getChildrenDistPair(model)
-
+# if __name__ == "__main__":
+#     main()
