@@ -6,6 +6,16 @@ from scipy.cluster.hierarchy import fclusterdata
 from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 
+def sim(x, y): 
+    print(x, y)
+    return 1.0 - np.sum(np.equal(np.array(x), np.array(y)))/len(x)
+
+# Method to calculate distances between all sample pairs
+from sklearn.metrics import pairwise_distances
+def sim_affinity(X):
+    return pairwise_distances(X, metric=sim)
+
+
 def calculateLocationScore(location1, location2):
     # set 2700 miles
     # distance between Miami and Seattle is 2733.497
@@ -41,11 +51,10 @@ def getChildrenDistPair(model):
     return matrix
 
 
-# data = np.array([[1,0,2],[2,3,4],[1,5,1],[3,4,5],[1,0,9]])
-data = np.random.randn(5,3)
-
+data = np.array([[1,0,2],[2,3,4],[1,5,1],[3,4,5],[1,0,9]])
+# data = np.random.randn(5,3)
 # setting distance_threshold=0 ensures we compute the full tree.
-model = AgglomerativeClustering(distance_threshold=0, n_clusters=None)
+model = AgglomerativeClustering(distance_threshold=0, n_clusters=None, affinity=sim_affinity, linkage='average')
 model.fit(data)
 getChildrenDistPair(model)
 
