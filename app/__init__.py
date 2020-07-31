@@ -4,7 +4,10 @@ import os
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from app.config import config, Config
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask_mail import Mail, Message
 
+mail = Mail()
 db = SQLAlchemy()
 logger = logging.getLogger(__name__)
 
@@ -23,10 +26,22 @@ def create_app(config_name=None, db_ref=None) -> Flask:
         db_ref.reflect(app=app)
     with app.app_context():
         db.create_all()
-
+    mail.init_app(app)
     configure_blueprints(app, app_config)
     configure_error_handlers(app)
-    return app
+
+    scheduler = BackgroundScheduler()
+    from app.matching import match_routine
+    # in your case you could change seconds to hours
+    scheduler.add_job(match_routine, trigger='interval', days=1)
+    scheduler.start()
+
+    try:
+        # To keep the main thread alive
+        return app
+    except:
+        # shutdown if app occurs except 
+        scheduler.shutdown()
 
 
 def configure_blueprints(flask_app: Flask, config: Config):

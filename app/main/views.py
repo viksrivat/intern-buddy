@@ -42,7 +42,11 @@ def session_details():
     school = content['School']
     hangout_intent_str = content['HangoutIntent']
 
-    user = User(alexa_user_id=user_id)
+    phone_number = content['PhoneIntent']
+    alias = content['AliasIntent']
+    domain = content['DomainIntent']
+    email = "{}@{}".format(alias, domain)
+    user = User(alexa_user_id=user_id, phone_number=phone_number, email=email)
     preference = Preference(group_size=parse_group_size(group_size_str),
                             position_type=parse_position(position_str), 
                             location=location, 

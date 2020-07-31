@@ -40,6 +40,12 @@ class Config(object):
         "CELERY_IGNORE_RESULT": True,
         "CELERY_UTC_ENABLE": True,
     }
+    MAIL_SERVER = 'smtp.office365.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_PASSWORD = 'internbuddy!'
+    MAIL_USERNAME = 'alexainternbuddy@outlook.com'  # enter your email here
+    MAIL_DEFAULT_SENDER = 'alexainternbuddy@outlook.com' # enter your email here
 
     CELERY_UTC_ENABLE = True
     SQLALCHEMY_POOL_TIMEOUT = None
