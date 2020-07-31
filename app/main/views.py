@@ -33,14 +33,14 @@ def parse_hangout_intent(hangout_str):
 @main.route("/session_info", methods=["POST", "GET"])
 def session_details():
     content = request.json
-    user_id = context['user_id']
-    group_size_str = context['GroupSize']
+    user_id = content['user_id']
+    group_size_str = content['GroupSize']
     
-    position_str = context['PositionIntent']
-    age_group = context['AgeIntent']
-    location = context['Location']
-    school = context['School']
-    hangout_intent_str = context['HangoutIntent']
+    position_str = content['PositionIntent']
+    age_group = content['AgeIntent']
+    location = content['Location']
+    school = content['School']
+    hangout_intent_str = content['HangoutIntent']
 
     user = User(alexa_user_id=user_id)
     preference = Preference(group_size=parse_group_size(group_size_str),

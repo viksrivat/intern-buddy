@@ -1,5 +1,4 @@
 import numpy as np
-from app.models import model
 from sklearn.cluster import AgglomerativeClustering
 import geopy
 from geopy.distance import geodesic
