@@ -1,0 +1,20 @@
+{
+    "HangoutIntent": "hang out",
+    "School": "Berkeley",
+    "device_id": "amzn1.ask.device.AEQ7IZN4Y6L4CWKWU36SC5MVUSBO52WMMDY6RROPEOVD2R74R6K7GOPHLWHCTDAQDM5NWPBKRX7WZSBLTTJEMRYGKMX7S3JRHPW3I4PZTC5VTWLGU6HIBAJNXKC7GHDJ3RW74CAI2TLE4FCRFQB2HFESCCUVIBLZA4RRHHMITBOL75JX2R7CS",
+    "user_id": "amzn1.ask.account.AEW6JZ7WAPC6CXTIZBQ5POEA6ZHBELEGRCCHFDFU7BU3SF53IKF4KC4DN43RY3XCGM6NGYUBZDZLYKEDQCI36ER3QL7OLC73II5D4MBL7GB73NH27JWONZDHAR5EWBGLT4BRXISWLNO7K6AL5QZ27W55YRLYIWS4OIW7LSPWEEU55JB5CKAFOTRKVWT6Z2JMWQ2KRZ3PW5G4N7Y",
+    "questions": [
+      "Requesting your preferences. Please respond with the question number and then your answer. You may say skip, proceed, or continue to ignore a question. Would you like to begin?",
+      "One. Which city will you be working in for the upcoming summer?",
+      "Two. What university or school do you currently attend?",
+      "Three. What's your ideal group size? You can respond with small, medium, and large.",
+      "Four. what's your intern position? You can say Software Development, Business Analyst, Program Manager, etc.",
+      "Five. Would you like to match with undergraduates or graduates?",
+      "Six. Would you be willing to hang out with your buddy after work? You can say hang out or stay home."
+    ],
+    "GroupSize": "small",
+    "PositionIntent": "sde",
+    "question_number": 8,
+    "AgeIntent": "undergraduates",
+    "Location": "San Jose"
+  }

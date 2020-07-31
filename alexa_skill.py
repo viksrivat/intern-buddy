@@ -2,6 +2,7 @@ from flask import Flask
 from flask_ask import Ask, statement, question, session
 import logging
 from flask_ask import context
+import requests
 
 app = Flask(__name__)
 ask = Ask(app, "/testalexa")
@@ -19,6 +20,8 @@ def start_session():
 
     session.attributes["questions"] = None
     session.attributes["question_number"] = 0
+    session.attributes['device_id'] = context.System.device.deviceId
+    session.attributes['user_id'] = session.user.userId
 
     session.attributes["questions"] = setup_questions()
     logging.warning("Questions: " + str(session.attributes["questions"]))
@@ -46,7 +49,9 @@ def setup_questions():
 def get_preference(pref_num):
     session.attributes["question_number"] = pref_num + 1
     if pref_num == len(session.attributes["questions"]):
-    	return statement("Analyzing your preferences. Please wait while we search for your match!")
+        print(session.attributes)
+        r = requests.post('http://089af49540a4.ngrok.io/session_info', json=session.attributes)
+        return statement("Analyzing your preferences. Please wait while we search for your match!")
     else:
         current_question = session.attributes["questions"][pref_num]
         logging.warning("Current question: " + current_question)
@@ -66,7 +71,7 @@ def initiate_get_preferences():
     logging.warning("Start Intent Question Number: " + str(session.attributes["question_number"]))
     return get_preference(session.attributes["question_number"])
 
-# Continue questions until no more are left.
+# Co    ntinue questions until no more are left.
 @ask.intent("ContinueIntent")
 def next_question():
     logging.warning("Continue Intent Question Number: " + str(session.attributes["question_number"]))
@@ -74,26 +79,32 @@ def next_question():
 
 @ask.intent("LocationIntent", convert={'Location' : str})
 def handle_location(Location):
+    session.attributes['Location'] = Location
     return question("You selected this location: " + Location + ". Would you like to proceed?")
 
 @ask.intent("SchoolIntent", convert={'School' : str})
 def handle_school(School):
+    session.attributes['School'] = School
     return question("You are currently attending: " + School + ". Would you like to proceed?")
 
 @ask.intent("GroupSizeIntent", convert={'GroupSize' : str})
 def handle_group(GroupSize):
+    session.attributes['GroupSize'] = GroupSize
     return question("Your group size is: " + GroupSize + ". Would you like to proceed?")
 
 @ask.intent("PositionIntent", convert={'Position' : str})
 def handle_group(Position):
+    session.attributes['PositionIntent'] = Position
     return question("You would like to meet: " + Position + "interns. Is that okay?")
 
 @ask.intent("AgeIntent", convert={'Age' : str})
 def handle_group(Age):
+    session.attributes['AgeIntent'] = Age
     return question("Your selected this age group: " + Age + ". Would you like to proceed?")
 
 @ask.intent("HangoutIntent", convert={'Hangout' : str})
 def handle_group(Hangout):
+    session.attributes['HangoutIntent'] = Hangout
     return question("Your opted to: " + Hangout + ". Would you like to proceed?")
 
 @ask.session_ended
