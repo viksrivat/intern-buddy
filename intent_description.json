@@ -1,0 +1,258 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "intern buddy",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "StartIntentYes",
+                    "slots": [],
+                    "samples": [
+                        "sure",
+                        "ok",
+                        "yeah",
+                        "yes"
+                    ]
+                },
+                {
+                    "name": "StartIntentNo",
+                    "slots": [],
+                    "samples": [
+                        "no way",
+                        "nope",
+                        "no"
+                    ]
+                },
+                {
+                    "name": "ContinueIntent",
+                    "slots": [],
+                    "samples": [
+                        "proceed",
+                        "next",
+                        "continue",
+                        "skip"
+                    ]
+                },
+                {
+                    "name": "LocationIntent",
+                    "slots": [
+                        {
+                            "name": "Location",
+                            "type": "AMAZON.City"
+                        }
+                    ],
+                    "samples": [
+                        "One {Location}"
+                    ]
+                },
+                {
+                    "name": "SchoolIntent",
+                    "slots": [
+                        {
+                            "name": "School",
+                            "type": "AMAZON.EducationalOrganization"
+                        }
+                    ],
+                    "samples": [
+                        "Two {School}"
+                    ]
+                },
+                {
+                    "name": "HangoutIntent",
+                    "slots": [
+                        {
+                            "name": "Hangout",
+                            "type": "Hangout"
+                        }
+                    ],
+                    "samples": [
+                        "Six {Hangout}"
+                    ]
+                },
+                {
+                    "name": "AgeIntent",
+                    "slots": [
+                        {
+                            "name": "Age",
+                            "type": "Age"
+                        }
+                    ],
+                    "samples": [
+                        "Five {Age}"
+                    ]
+                },
+                {
+                    "name": "PositionIntent",
+                    "slots": [
+                        {
+                            "name": "Position",
+                            "type": "Position"
+                        }
+                    ],
+                    "samples": [
+                        "Four {Position}"
+                    ]
+                },
+                {
+                    "name": "GroupSizeIntent",
+                    "slots": [
+                        {
+                            "name": "GroupSize",
+                            "type": "GroupSize"
+                        }
+                    ],
+                    "samples": [
+                        "Three {GroupSize}"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "Hangout",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "go out"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "hanging out"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "socialize"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "stay at home"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "stay home"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "hang out"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Age",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "undergraduate"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "graduate students"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "undergraduate students"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "graduates"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "undergraduates"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "graduate"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "undergarduate"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Position",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "PM"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "BA"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "SDE"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Program Management"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Business Analyst"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Software Development Engineering"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "GroupSize",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "large"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "medium"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "small"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
