@@ -53,7 +53,6 @@ def get_preference(pref_num):
     session.attributes["question_number"] = pref_num + 1
     if pref_num >= len(session.attributes["questions"]):
         r = requests.post('http://089af49540a4.ngrok.io/session_info', json=session.attributes)
-        set_email()
         return statement("Analyzing your preferences. Please wait while we search for your match!")
     else:
         current_question = session.attributes["questions"][pref_num]
@@ -143,9 +142,6 @@ def handle_domain(Domain):
     format = format.replace("period", ".")
     session.attributes["DomainIntent"] = format.lower()
     return question("Your domain is: " + format + ". Would you like to continue?")
-
-def set_email():
-    return AliasIntent + "@" + DomainIntent;
 
 @ask.session_ended
 def session_ended():
