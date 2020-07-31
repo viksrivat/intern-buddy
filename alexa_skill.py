@@ -2,6 +2,7 @@ from flask import Flask
 from flask_ask import Ask, statement, question, session
 import logging
 from flask_ask import context
+import requests
 
 app = Flask(__name__)
 ask = Ask(app, "/testalexa")
@@ -50,7 +51,6 @@ def get_preference(pref_num):
     if pref_num == len(session.attributes["questions"]):
         print(session.attributes)
         r = requests.post('http://089af49540a4.ngrok.io/session_info', json=session.attributes)
-        print(r.json())
         return statement("Analyzing your preferences. Please wait while we search for your match!")
     else:
         current_question = session.attributes["questions"][pref_num]
@@ -94,12 +94,12 @@ def handle_group(GroupSize):
 
 @ask.intent("PositionIntent", convert={'Position' : str})
 def handle_group(Position):
-    session.attributes['PositionIntent'] = PositionIntent
+    session.attributes['PositionIntent'] = Position
     return question("You would like to meet: " + Position + "interns. Is that okay?")
 
 @ask.intent("AgeIntent", convert={'Age' : str})
 def handle_group(Age):
-    session.attributes['AgeIntent'] = AgeIntent
+    session.attributes['AgeIntent'] = Age
     return question("Your selected this age group: " + Age + ". Would you like to proceed?")
 
 @ask.intent("HangoutIntent", convert={'Hangout' : str})
