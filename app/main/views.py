@@ -16,14 +16,14 @@ def parse_group_size(group_size):
 def parse_position(position):
     if position == 'SDE' or position == 'sde' or position == 'Software Development Engineering':
         return Position.sde
-    if position == 'Program Management' or position = 'pm' or position == 'PM':
+    if position == 'Program Management' or position == 'pm' or position == 'PM':
         return Position.medium
     return GroupSize.small
 
 def parse_school_level(position):
     if position == 'undergraduate' or position == 'undergraduate students' or position == 'undergraduates':
         return SchoolLevel.undergraduate
-    if position == 'graduate students' or position = 'graduate' or position == 'graduates':
+    if position == 'graduate students' or position == 'graduate' or position == 'graduates':
         return SchoolLevel.graduate
     return SchoolLevel.other
 
